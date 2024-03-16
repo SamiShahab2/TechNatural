@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v0.1
+# Version: v0.2
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -77,11 +77,71 @@ of use to be found?"""
         "item": "N/A",
         "enemy": "N/A",
         "description":
-        """You nearly trip over a fallen over file cabinet while entering the room
-"""
+        """You nearly trip over a fallen over file cabinet while entering the room.
+Littering the floor are several empty file holders and empty cabinets.
+There appears to be one cabinet however that is closed, albeit electronically locked."""
+    },
+    "Hallway": {
+        "x": 2,
+        "y": 2,
+        "item": "N/A",
+        "enemy": "N/A",
+        "description":
+        """You peer through the door to find a hallway with more doors.
+The hallway itself isn't noteworthy but there may be supplies in these other rooms."""
+    },
+    "Heating": {
+            "x": 2,
+            "y": 1,
+            "item": "N/A",
+            "enemy": "Venus Flame Trap",
+            "description":
+            """Steam gushes out of the mechanism within this room.
+The Machine seems to have been designed to heat the facility.
+However, the machine begins to sputter flames as two leaves emerge from it's sides.
+These leaves form a mouth that begins to spew fire in your direction!"""
+    },
+    "Cryopod Monitoring Room": {
+        "x": 1,
+        "y": 3,
+        "item": "N/A",
+        "enemy": "N/A",
+        "description":
+        """You walk into a room seemingly designed to monitor the cryopods.
+Most of the devices have shut off or have been desecrated with foliage.
+There still remains one device that is functional."""
+    },
+    "Cryopod Room": {
+        "x": 1,
+        "y": 2,
+        "item": "N/A",
+        "enemy": "N/A",
+        "description":
+        """Looking around, you notice that the other cryopods have roots
+and other plant life bursting out of them. They have been rendered useless."""
+    },
+    "Cryopod Generator Room": {
+        "x": 1,
+        "y": 1,
+        "item": "N/A",
+        "enemy": "Technoplant",
+        "description":
+        """This room contains the generators that power the cryopods.
+A few are damaged but most are running. One of them has a root sticking out.
+It's seemingly rerouting power to something. Following the root leads you to a
+metallic plant that begins to thrash at you violently."""
+    }
 }
 
 # Imports and Global Variables =================================================================
+# Tracks player's horizontal location
+_playerx_ = 1
+# Tracks player's vertical location
+_playery_ = 2
+
 
 # Functions ====================================================================================
 
+def startup():
+    """Prints text at the beginning of the game"""
+    print()
