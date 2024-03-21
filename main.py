@@ -7,8 +7,24 @@
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+# Imports and Global Variables =================================================================
+import sys
+
+# Tracks the player's health
+_playerhealth_ = 100
+# Tracks player's horizontal location
+_playerx_ = 1
+# Tracks player's vertical location
+_playery_ = 2
+# Tracks the player's weapons
+_playerweapons_ = "Glass Shard"
+# Tracks the player's equipped weapon
+_playereqweapon_ = "Glass Shard"
+# Tracks player's movement choice
+_playerchoice_ = "N/A"
+
 # Lists ========================================================================================
-LabFloor1={
+LabFloor1 = {
     "Destroyed Hive": {
         "x": 4, 
         "y": 3, 
@@ -133,15 +149,120 @@ metallic plant that begins to thrash at you violently."""
     }
 }
 
-# Imports and Global Variables =================================================================
-# Tracks player's horizontal location
-_playerx_ = 1
-# Tracks player's vertical location
-_playery_ = 2
+PlayerStats = {
+    "health": _playerhealth_,
+    "weapons": _playerweapons_,
+    "equipweap": _playereqweapon_,
+    "x-location": _playerx_,
+    "y-location": _playery_
+}
 
+MoveOptions = ["a", "d", "w", "s"]
 
 # Functions ====================================================================================
 
 def startup():
     """Prints text at the beginning of the game"""
-    print()
+    print("Welcome to Technatural! A text based adventure RPG!")
+    print("""You wake up in a cryopod with no prior memory of your past.
+Emerging from the tank, you see that you are in a man made room covered with plant-life.
+There does not seem to be anyone else here, though there are noises from other rooms.
+Arming yourself with a glass shard, you set out to escape.""")
+
+def describeroom():
+    """Prints the description of the room the player is in"""
+    # Checks the room the player currently is
+    for roomattributes in LabFloor1.values():
+        # If the room's coordinates match the player's coordinates
+        if _playerx_ == roomattributes["x"] and _playery_ == roomattributes["y"]:
+            # The room's description is printed and the loop breaks
+            print(roomattributes["description"])
+            break
+
+def movement():
+    """Code that controls the player's movements"""
+    global _playerx_, _playery_, _playerchoice_
+    # Plays the loop while a choice has not been inputted
+    while _playerchoice_ == "N/A":
+        try:
+            # Prints out all of the movement options the players have
+            print("\n")
+            print("q - Quit Game")
+            # If the player cannot move in that direction, the option is not printed
+            if _playerx_ != 4:
+                print("a - Move Left")
+            if _playerx_ != 1:
+                print("d - Move Right")
+            if _playery_ != 3:
+                print("w - Move Up")
+            if _playery_ != 1:
+                print("s - Move Down")
+            # The player inputs their option here
+            _playerchoice_ = input("Type the letter to choose where to go: ")
+            print("\n")
+            # If the player inputs "q" then the player will exit the game
+            if _playerchoice_ == "q":
+                print("Bye Bye!")
+                _playerchoice_ = "quit"
+                sys.exit()
+            # The input is tested to see if it's an number
+            _playerchoice_ = float(_playerchoice_)
+        # A ValueError indicates the input is a string
+        except ValueError:
+            # Checks if the player's is a valid movement option
+            if _playerchoice_ not in MoveOptions:
+                # If not, an error message is shown and the loop continues
+                print("Input an letter from the options")
+                _playerchoice_ = "N/A"
+        # No ValueError indicates the input is a number
+        else:
+            # An error message is displayed and the loop continues
+            print("Don't input a number")
+            _playerchoice_ = "N/A"
+        finally:
+            # Checks if the player can move in that direction
+            if ((_playerx_ == 4 and _playerchoice_ == "a")
+                or (_playerx_ == 1 and _playerchoice_ == "d")
+                or (_playery_ == 3 and _playerchoice_ == "w") 
+                or (_playery_ == 1 and _playerchoice_ == "s")):
+                # If the player is on the edge of the map, the movement fails
+                    # An error message is printed and the loop continues
+                    print("Can't move in that direction!")
+                    print("Movement Failed")
+                    _playerchoice_ = "N/A"
+            # Otherwise the code checks the playerchoice variable
+            else:
+              # Checks if player wants to move left
+              if _playerchoice_ == "a":
+                  _playerx_ = _playerx_ + 1
+                  print("Moving left")
+              # Checks if player wants to move right
+              elif _playerchoice_ == "d":
+                  _playerx_ = _playerx_ - 1
+                  print("Moving right")
+              # Checks if player wants to move up
+              elif _playerchoice_ == "w":
+                  _playery_ = _playery_ + 1
+                  print("Moving up")
+              # Checks if player wants to move down
+              elif _playerchoice_ == "s":
+                  _playery_ = _playery_ - 1
+                  print("Moving down")
+              # If none of the above matches then the general error message prints
+              else:
+                  # Unless the player chose to quit
+                  if _playerchoice_ != "quit":
+                      print("Movement Failed!")
+    # Choice is set back to N/A
+    _playerchoice_ = "N/A"
+    # When the function is called again, the loop will work properly
+
+def gameplay():
+    """Encapsulates the essential functions for gameplay"""
+    while True:
+        print("\n")
+        describeroom()
+        movement()
+
+startup()
+gameplay()
