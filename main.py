@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v0.2
+# Version: v0.4
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -13,9 +13,9 @@ import sys
 # Tracks the player's health
 _playerhealth_ = 100
 # Tracks player's horizontal location
-_playerx_ = 1
+_playerx_ = 3
 # Tracks player's vertical location
-_playery_ = 2
+_playery_ = 1
 # Tracks the player's weapons
 _playerweapons_ = "Glass Shard"
 # Tracks the player's equipped weapon
@@ -24,10 +24,13 @@ _playereqweapon_ = "Glass Shard"
 _playerchoice_ = "N/A"
 
 # Lists ========================================================================================
+
+Floor1Map = [["Destroyed Hive", "Stairs", "Documentation Room", "Cryopod Monitoring Room"],
+             ["Overgrown Hallway", "Experiment Room", "Hallway", "Cryopod Room"],
+             ["Weapon Testing Chamber", "Equipment Room", "Heating", "Cryopod Generator Room"]]
+
 LabFloor1 = {
     "Destroyed Hive": {
-        "x": 4, 
-        "y": 3, 
         "item": "N/A",
         "enemy": "Metallic Bee",
         "description": 
@@ -36,8 +39,6 @@ Pieces of sharp metal and wax litter the room. Suddenly, a piece of shrapnel
 flies past your head, barely missing you!""" 
     },
     "Overgrown Hallway": {
-        "x": 4,
-        "y": 2,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -46,8 +47,6 @@ and ground are covered in vines and greenery while the roof is bursting with
 flowers, each with a pleasant aroma."""
     },
     "Weapon Testing Chamber": {
-        "x": 4,
-        "y": 1,
         "item": "N/A",
         "enemy": "Rocket Ram",
         "description":
@@ -57,8 +56,6 @@ In the middle of the room stands one ram, seemingly the culprit of this destruct
 Suddenly, a rocket launcher emerges from a panel on the ram's side!"""
     },
     "Stairs": {
-        "x": 3,
-        "y": 3,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -67,8 +64,6 @@ There is a sweet, flowery aroma creeping down from the upper floor.
 You can choose to move up the staircase or stay in this floor for a bit longer."""
     },
     "Experiment Room": {
-        "x": 3,
-        "y": 2,
         "item": "N/A",
         "enemy": "Lazeep",
         "description":
@@ -77,8 +72,6 @@ merging animals and technology together in this location.
 A laser fired in your direction proves that these efforts weren't fruitless"""
     },
     "Equipment Room": {
-        "x": 3,
-        "y": 1,
         "item": "Weak Paralyzer",
         "enemy": "N/A",
         "description":
@@ -88,8 +81,6 @@ weapons are sprawled across the walls, all open. Still, maybe there is something
 of use to be found?"""
     },
     "Documentation Room": {
-        "x": 2,
-        "y": 3,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -98,8 +89,6 @@ Littering the floor are several empty file holders and empty cabinets.
 There appears to be one cabinet however that is closed, albeit electronically locked."""
     },
     "Hallway": {
-        "x": 2,
-        "y": 2,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -107,8 +96,6 @@ There appears to be one cabinet however that is closed, albeit electronically lo
 The hallway itself isn't noteworthy but there may be supplies in these other rooms."""
     },
     "Heating": {
-            "x": 2,
-            "y": 1,
             "item": "N/A",
             "enemy": "Venus Flame Trap",
             "description":
@@ -118,8 +105,6 @@ However, the machine begins to sputter flames as two leaves emerge from it's sid
 These leaves form a mouth that begins to spew fire in your direction!"""
     },
     "Cryopod Monitoring Room": {
-        "x": 1,
-        "y": 3,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -128,8 +113,6 @@ Most of the devices have shut off or have been desecrated with foliage.
 There still remains one device that is functional."""
     },
     "Cryopod Room": {
-        "x": 1,
-        "y": 2,
         "item": "N/A",
         "enemy": "N/A",
         "description":
@@ -137,8 +120,6 @@ There still remains one device that is functional."""
 and other plant life bursting out of them. They have been rendered useless."""
     },
     "Cryopod Generator Room": {
-        "x": 1,
-        "y": 1,
         "item": "N/A",
         "enemy": "Technoplant",
         "description":
@@ -172,9 +153,10 @@ Arming yourself with a glass shard, you set out to escape.""")
 def describeroom():
     """Prints the description of the room the player is in"""
     # Checks the room the player currently is
-    for roomattributes in LabFloor1.values():
-        # If the room's coordinates match the player's coordinates
-        if _playerx_ == roomattributes["x"] and _playery_ == roomattributes["y"]:
+    for roomname, roomattributes in LabFloor1.items():
+        # If the room's name matches the name on the array
+        # Determined using the player's coordinates
+        if roomname == Floor1Map[_playery_][_playerx_]:
             # The room's description is printed and the loop breaks
             print(roomattributes["description"])
             break
@@ -189,13 +171,13 @@ def movement():
             print("\n")
             print("q - Quit Game")
             # If the player cannot move in that direction, the option is not printed
-            if _playerx_ != 4:
+            if _playerx_ != 0:
                 print("a - Move Left")
-            if _playerx_ != 1:
+            if _playerx_ != 3:
                 print("d - Move Right")
-            if _playery_ != 3:
+            if _playery_ != 0:
                 print("w - Move Up")
-            if _playery_ != 1:
+            if _playery_ != 2:
                 print("s - Move Down")
             # The player inputs their option here
             _playerchoice_ = input("Type the letter to choose where to go: ")
@@ -221,10 +203,10 @@ def movement():
             _playerchoice_ = "N/A"
         finally:
             # Checks if the player can move in that direction
-            if ((_playerx_ == 4 and _playerchoice_ == "a")
-                or (_playerx_ == 1 and _playerchoice_ == "d")
-                or (_playery_ == 3 and _playerchoice_ == "w") 
-                or (_playery_ == 1 and _playerchoice_ == "s")):
+            if ((_playerx_ == 0 and _playerchoice_ == "a")
+                or (_playerx_ == 3 and _playerchoice_ == "d")
+                or (_playery_ == 0 and _playerchoice_ == "w") 
+                or (_playery_ == 2 and _playerchoice_ == "s")):
                 # If the player is on the edge of the map, the movement fails
                     # An error message is printed and the loop continues
                     print("Can't move in that direction!")
@@ -234,19 +216,19 @@ def movement():
             else:
               # Checks if player wants to move left
               if _playerchoice_ == "a":
-                  _playerx_ = _playerx_ + 1
+                  _playerx_ = _playerx_ - 1
                   print("Moving left")
               # Checks if player wants to move right
               elif _playerchoice_ == "d":
-                  _playerx_ = _playerx_ - 1
+                  _playerx_ = _playerx_ + 1
                   print("Moving right")
               # Checks if player wants to move up
               elif _playerchoice_ == "w":
-                  _playery_ = _playery_ + 1
+                  _playery_ = _playery_ - 1
                   print("Moving up")
               # Checks if player wants to move down
               elif _playerchoice_ == "s":
-                  _playery_ = _playery_ - 1
+                  _playery_ = _playery_ + 1
                   print("Moving down")
               # If none of the above matches then the general error message prints
               else:
