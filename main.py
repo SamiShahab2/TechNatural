@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v3.0
+# Version: v3.1
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -16,14 +16,14 @@ import inventory
 
 import searchnevent
 
-# Tracks player's movement choice
+# Tracks player's input choice
 _playerchoice_ = "N/A"
 
 
 # Lists ========================================================================================
 
 
-
+# Variable that contains the stats of the player
 PlayerStats = {
     "health": inventory._playerhealth_,
     "weapons": inventory._playerweapons_,
@@ -33,6 +33,7 @@ PlayerStats = {
     "items": inventory._playeritems_
 }
 
+# Contains all of the keys used in the movement function
 MoveOptions = ["a", "d", "w", "s", "c", "f", "m"]
 
 
@@ -140,17 +141,20 @@ m - Map""")
               elif _playerchoice_ == "s":
                   map._playery_ = map._playery_ + 1
                   print("Moving down")
-              # Checks if the player searched or opened their inventory
+              # Checks if the player searched, opened their inventory, or tried to check maps
               elif (_playerchoice_ == "c" 
                     or _playerchoice_ == "f"
                     or _playerchoice_ == "m"):
                   # If the player inputs c then the search function runs
                   if _playerchoice_ == "c":
                       searchnevent.searchroom()
+                  # If the player inputs f then the inventory function runs
                   elif _playerchoice_ == "f":
                       inventory.inventory(_playerchoice_)
+                  # If the player inputs m then the map function runs
                   elif _playerchoice_ == "m":
                       inventory.mapview(_playerchoice_)
+                  # Loop will continue after the function has concluded
                   _playerchoice_ = "N/A"
               # If none of the above matches then the general error message prints
               else:

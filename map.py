@@ -8,10 +8,12 @@ _playerx_ = 3
 # Tracks player's vertical location
 _playery_ = 1
 
+# Array containing the map
 Floor1Map = [["Destroyed Hive", "Stairs", "Documentation Room", "Cryopod Monitoring Room"],
              ["Overgrown Hallway", "Experiment Room", "Hallway", "Cryopod Room"],
              ["Weapon Testing Chamber", "Equipment Room", "Heating", "Cryopod Generator Room"]]
 
+# Data for every room on the first floor
 LabFloor1 = {
     "Destroyed Hive": {
         "item": "N/A",
