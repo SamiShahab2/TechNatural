@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v2.0
+# Version: v2.5
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -90,6 +90,14 @@ merging animals and technology together in this location."""
         "item": "Weak Paralyzer",
         "enemy": "N/A",
         "visited": 0,
+        "event": {"event-type": "find",
+                  "reward-type": "Key",
+                  "status": 0,
+                  "solved":
+          """You managed to find a functional, albeit weak paralyzer in the room""",
+          "complete": 
+          """No other items seem to remain here"""
+         },
         "description":
         """This room seems to have contained securtity equipment, though it has been
 ransacked and mostly cleared out. Empty panels once containing armour and
@@ -98,7 +106,9 @@ of use to be found?""",
         "alt-description":
         """This room seems to have contained securtity equipment, though it has been
 ransacked and mostly cleared out. 
-Whoever was last here wanted to be prepared for something..."""
+Whoever was last here wanted to be prepared for something...""",
+        "search":
+      """You begin searching the room for any useful supplies"""
     },
     "Documentation Room": {
         "item": "N/A",
@@ -186,7 +196,7 @@ _playeritems_ = {
     "Bandaid": 10
   },
   "Key": 
-    {"Weak Paralyzer"},
+    [],
   "Map":
     ["Floor 1 Map"]
 }
@@ -341,12 +351,22 @@ def searchroom():
             try:
                 print(roomattributes["search"])
                 if "event" in roomattributes:
-                    if roomattributes["event"]["status"] == 0:
-                        roomattributes["event"]["status"] = 1
-                    elif roomattributes["event"]["status"] == 1:
-                        print(roomattributes["event"]["hint"])
+                    if (roomattributes["event"]["event-type"] == "find"
+                        and roomattributes["event"]["status"] == 0):
+                        print(roomattributes["event"]["solved"])
+                        (_playeritems_[roomattributes["event"]["reward-type"]]
+                        .append(roomattributes["item"]))
+                        print("\n")
+                        print(f"""You obtained {roomattributes['item']}!""")
+                        roomattributes["event"]["status"] = 2
+                        print("\n")
                     else:
-                        print(roomattributes["event"]["complete"])
+                        if roomattributes["event"]["status"] == 0:
+                            roomattributes["event"]["status"] = 1
+                        elif roomattributes["event"]["status"] == 1:
+                            print(roomattributes["event"]["hint"])
+                        else:
+                            print(roomattributes["event"]["complete"])
             except KeyError:
                 print("Nothing notable in here")
             finally:
@@ -443,9 +463,9 @@ def itemmenu(_playerchoice_):
                 print(f"You healed {_playeritems_['Heal'][_playerchoice_]} HP!")
                 _playeritems_["Heal"].pop(_playerchoice_)
             elif _playerchoice_ in _playeritems_["Key"]:
-                unlockevent(_playerchoice_)
+                eventunlock(_playerchoice_)
 
-def unlockevent(_playerchoice_):
+def eventunlock(_playerchoice_):
     """Handles unlock events"""
      # Checks the room the player currently is in
     for roomname, roomattributes in LabFloor1.items():
