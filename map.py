@@ -1,12 +1,7 @@
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 # Map Module
 """Contains data for the map"""
-#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
-# Tracks player's horizontal location
-_playerx_ = 3
-# Tracks player's vertical location
-_playery_ = 1
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
 # Array containing the map
 Floor1Map = [["Destroyed Hive", "Stairs", "Documentation Room", "Cryopod Monitoring Room"],
@@ -75,7 +70,7 @@ merging animals and technology together in this location."""
         "enemy": "N/A",
         "visited": 0,
         "event": {"event-type": "find",
-                  "reward-type": "Key",
+                  "reward-type": "key",
                   "status": 0,
                   "solved":
           """You managed to find a functional, albeit weak paralyzer in the room""",
@@ -95,12 +90,11 @@ Whoever was last here wanted to be prepared for something...""",
       """You begin searching the room for any useful supplies"""
     },
     "Documentation Room": {
-        "item": "N/A",
+        "item": "Floor 1 Map",
         "enemy": "N/A",
         "visited": 0,
         "event": {"event-type": "unlock",
-                  "reward": "Floor 1 Map",
-                  "reward-type": "Map",
+                  "reward-type": "map",
                   "required-item": "Weak Paralyzer",
                   "status": 0,
                   "hint":

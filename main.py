@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v3.1
+# Version: v3.3
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -16,22 +16,14 @@ import inventory
 
 import searchnevent
 
+import stats
+
 # Tracks player's input choice
 _playerchoice_ = "N/A"
 
 
 # Lists ========================================================================================
 
-
-# Variable that contains the stats of the player
-PlayerStats = {
-    "health": inventory._playerhealth_,
-    "weapons": inventory._playerweapons_,
-    "equipweap": inventory._playereqweapon_,
-    "x-location": map._playerx_,
-    "y-location": map._playery_,
-    "items": inventory._playeritems_
-}
 
 # Contains all of the keys used in the movement function
 MoveOptions = ["a", "d", "w", "s", "c", "f", "m"]
@@ -47,13 +39,14 @@ Emerging from the tank, you see that you are in a man made room covered with pla
 There does not seem to be anyone else here, though there are noises from other rooms.
 Arming yourself with a glass shard, you set out to escape.""")
 
+
 def describeroom():
     """Prints the description of the room the player is in"""
     # Checks the room the player currently is in
     for roomname, roomattributes in map.LabFloor1.items():
         # If the room's name matches the name on the array
         # Determined using the player's coordinates
-        if roomname == map.Floor1Map[map._playery_][map._playerx_]:
+        if roomname == map.Floor1Map[stats.player.y_loc][stats.player.x_loc]:
             print(roomname)
             print("\n")
             # If the room has been visited then the alt description prints
@@ -71,7 +64,7 @@ def describeroom():
 
 def movement():
     """Code that controls the player's movements"""
-    global _playerx_, _playery_, _playerchoice_
+    global _playerchoice_
     # Plays the loop while a choice has not been inputted
     while _playerchoice_ == "N/A":
         try:
@@ -82,13 +75,13 @@ c - Search
 f - Inventory
 m - Map""")
             # If the player cannot move in that direction, the option is not printed
-            if map._playerx_ != 0:
+            if stats.player.x_loc != 0:
                 print("a - Move Left")
-            if map._playerx_ != 3:
+            if stats.player.x_loc != 3:
                 print("d - Move Right")
-            if map._playery_ != 0:
+            if stats.player.y_loc != 0:
                 print("w - Move Up")
-            if map._playery_ != 2:
+            if stats.player.y_loc != 2:
                 print("s - Move Down")
             # The player inputs their option here
             _playerchoice_ = input("Type the letter to choose what to do: ").lower()
@@ -114,10 +107,10 @@ m - Map""")
             _playerchoice_ = "N/A"
         finally:
             # Checks if the player can move in that direction
-            if ((map._playerx_ == 0 and _playerchoice_ == "a")
-                or (map._playerx_ == 3 and _playerchoice_ == "d")
-                or (map._playery_ == 0 and _playerchoice_ == "w") 
-                or (map._playery_ == 2 and _playerchoice_ == "s")):
+            if ((stats.player.x_loc == 0 and _playerchoice_ == "a")
+                or (stats.player.x_loc == 3 and _playerchoice_ == "d")
+                or (stats.player.y_loc == 0 and _playerchoice_ == "w") 
+                or (stats.player.y_loc == 2 and _playerchoice_ == "s")):
                 # If the player is on the edge of the map, the movement fails
                     # An error message is printed and the loop continues
                     print("Can't move in that direction!")
@@ -127,19 +120,19 @@ m - Map""")
             else:
               # Checks if player wants to move left
               if _playerchoice_ == "a":
-                  map._playerx_ = map._playerx_ - 1
+                  stats.player.x_loc = stats.player.x_loc - 1
                   print("Moving left")
               # Checks if player wants to move right
               elif _playerchoice_ == "d":
-                  map._playerx_ = map._playerx_ + 1
+                  stats.player.x_loc = stats.player.x_loc + 1
                   print("Moving right")
               # Checks if player wants to move up
               elif _playerchoice_ == "w":
-                  map._playery_ = map._playery_ - 1
+                  stats.player.y_loc = stats.player.y_loc - 1
                   print("Moving up")
               # Checks if player wants to move down
               elif _playerchoice_ == "s":
-                  map._playery_ = map._playery_ + 1
+                  stats.player.y_loc = stats.player.y_loc + 1
                   print("Moving down")
               # Checks if the player searched, opened their inventory, or tried to check maps
               elif (_playerchoice_ == "c" 
@@ -153,7 +146,7 @@ m - Map""")
                       inventory.inventory(_playerchoice_)
                   # If the player inputs m then the map function runs
                   elif _playerchoice_ == "m":
-                      inventory.mapview(_playerchoice_)
+                      inventory.playeritems.mapview(_playerchoice_)
                   # Loop will continue after the function has concluded
                   _playerchoice_ = "N/A"
               # If none of the above matches then the general error message prints
@@ -174,6 +167,7 @@ def gameplay():
         print("\n")
         describeroom()
         movement()
+
 
 startup()
 gameplay()
