@@ -168,3 +168,67 @@ A few are damaged but most are running."""
     }
 }
 
+
+class Room:
+
+
+    def __init__(self, name, visited, description):
+        self.name = name
+        self.visited = visited
+        self.description = description
+
+
+class Alt(Room):
+
+
+    def __init__(self, name, visited, description, alt_description):
+        super().__init__(name, visited, description)
+        self.alt_description = alt_description
+
+
+class Event(Room):
+
+
+    def __init__(self, name, visited, description, 
+                 alt_description, search, event, item):
+        super().__init__(name, visited, description)
+        self.alt_description = alt_description
+        self.search = search
+        self.event = event
+        self.item = item
+
+
+def room_assigner(roomname, roomattributes):
+    global _room_, _roomtype_
+    if "event" in roomattributes:
+        _room_ = Event(roomname,
+                     roomattributes["visited"],
+                    roomattributes["description"],
+                    roomattributes["alt-description"],
+                    roomattributes["search"],
+                    roomattributes["event"],
+                    roomattributes["item"])
+        _roomtype_ = "event"
+    elif "alt-description" in roomattributes:
+        _room_ = Alt(roomname,
+                   roomattributes["visited"],
+                  roomattributes["description"],
+                  roomattributes["alt-description"])
+        _roomtype_ = "alt"
+    else:
+        _room_ = Room(roomname,
+                    roomattributes["visited"],
+                   roomattributes["description"])
+        _roomtype_ = "boring"
+
+
+def refresh_room():
+    """Saves changes in variables to the database and also deletes the object
+    to make room for the next room object"""
+    global _roomtype_, _room_
+    if _roomtype_ == "event":
+        LabFloor1[_room_.name]["event"] = _room_.event
+        LabFloor1[_room_.name]["visited"] = _room_.visited
+    elif _roomtype_  == "alt":
+        LabFloor1[_room_.name]["visited"] = _room_.visited
+    del _room_

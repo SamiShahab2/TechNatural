@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v3.3
+# Version: v3.4
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -42,6 +42,7 @@ Arming yourself with a glass shard, you set out to escape.""")
 
 def describeroom():
     """Prints the description of the room the player is in"""
+    global _room_
     # Checks the room the player currently is in
     for roomname, roomattributes in map.LabFloor1.items():
         # If the room's name matches the name on the array
@@ -49,17 +50,18 @@ def describeroom():
         if roomname == map.Floor1Map[stats.player.y_loc][stats.player.x_loc]:
             print(roomname)
             print("\n")
+            map.room_assigner(roomname, roomattributes)
             # If the room has been visited then the alt description prints
-            if roomattributes["visited"] == 1:
-                print(roomattributes["alt-description"])
+            if map._room_.visited == 1:
+                print(map._room_.alt_description)
                 # The loop then breaks early
                 break
             else:
                 # Otherwise if the room has an alt description, it's marked as visited
-                if roomattributes["visited"] == 0:
-                    roomattributes["visited"] = 1
+                if map._room_.visited == 0:
+                    map._room_.visited = 1
             # The room's description is printed and the loop breaks
-            print(roomattributes["description"])
+            print(map._room_.description)
             break
 
 def movement():
@@ -159,7 +161,7 @@ m - Map""")
     # Choice is set back to N/A
     _playerchoice_ = "N/A"
     # When the function is called again, the loop will work properly
-
+        
 
 def gameplay():
     """Encapsulates the essential functions for gameplay"""
@@ -167,6 +169,7 @@ def gameplay():
         print("\n")
         describeroom()
         movement()
+        map.refresh_room()
 
 
 startup()

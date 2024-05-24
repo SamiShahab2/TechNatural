@@ -11,6 +11,7 @@ import inventory
 
 def searchroom():
   """Code that handles the searching of the room"""
+  global _room_  
   # Checks the room the player currently is in
   for roomname, roomattributes in map.LabFloor1.items():
       # If the room's name matches the name on the array
@@ -18,35 +19,35 @@ def searchroom():
       if roomname == map.Floor1Map[stats.player.y_loc][stats.player.x_loc]:
           try:
               # Prints the search description
-              print(roomattributes["search"])
+              print(map._room_.search)
               # Checks if there is an event in the room
               if "event" in roomattributes:
                   # If the event is a find type and it has not been triggered
-                  if (roomattributes["event"]["event-type"] == "find"
-                      and roomattributes["event"]["status"] == 0):
+                  if (map._room_.event["event-type"] == "find"
+                      and map._room_.event["status"] == 0):
                       # The solved text is printed
-                      print(roomattributes["event"]["solved"])
+                      print(map._room_.event["solved"])
                       # The event reward is added to the player's inventory
-                      type_finder(roomname, roomattributes)
+                      type_finder(map._room_)
                       print("\n")
                       # The player is told which item they obtained
-                      print(f"""You obtained {roomattributes['item']}!""")
+                      print(f"""You obtained {map._room_.item}!""")
                       # The event is set as complete
-                      roomattributes["event"]["status"] = 2
+                      map._room_.event["status"] = 2
                       print("\n")
                   # If the event is not a find type
                   else:
                       # If the event has not been discovered then it is set to discovered
-                      if roomattributes["event"]["status"] == 0:
-                          roomattributes["event"]["status"] = 1
+                      if map._room_.event["status"] == 0:
+                          map._room_.event["status"] = 1
                       # If the event has been discovered, a hint is printed
-                      elif roomattributes["event"]["status"] == 1:
-                          print(roomattributes["event"]["hint"])
+                      elif map._room_.event["status"] == 1:
+                          print(map._room_.event["hint"])
                       else:
                           # Otherwise the completed text is printed
-                          print(roomattributes["event"]["complete"])
+                          print(map._room_.event["complete"])
           # If "search" can't be found, this message prints
-          except KeyError:
+          except AttributeError:
               print("Nothing notable in here")
           finally:
               # The search is completed and this message prints to indicate it
@@ -55,7 +56,8 @@ def searchroom():
 
 def eventunlock(_playerchoice_):
   """Handles unlock events"""
-   # Checks the room the player currently is in
+  global _room_
+  # Checks the room the player currently is in
   for roomname, roomattributes in map.LabFloor1.items():
       # If the room's name matches the name on the array
       # Determined using the player's coordinates
@@ -91,19 +93,19 @@ def eventunlock(_playerchoice_):
               pass
 
 
-def type_finder(name, attributes):
+def type_finder(room):
     """Determines what the type of the reward item is and
     places the item into the correct section in the inventory"""
     # If the reward is a key item
-    if attributes["event"]["reward-type"] == "key":
+    if room.event["reward-type"] == "key":
         # Add it to the key item section
-        print(name)
-        inventory.playeritems.key.append(attributes["item"])
+        print(room.name)
+        inventory.playeritems.key.append(room.item)
     # If the reward is a health item
-    elif attributes["event"]["reward-type"] == "heal":
+    elif room.event["reward-type"] == "heal":
         # Add it to the heal item section
-        (inventory.playeritems.heal.append(attributes["item"]))
+        (inventory.playeritems.heal.append(room.item))
     # Otherwise
     else:
         # Add the item to the map section
-        (inventory.playeritems.map.append(attributes["item"]))
+        (inventory.playeritems.map.append(room.item))
