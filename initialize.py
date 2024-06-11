@@ -8,7 +8,7 @@ _playerhealth_ = 100
 # Tracks the player's weapons
 _playerweapons_ = ["Glass Shard"]
 # Tracks the player's equipped weapon
-_playereqweapon_ = "Glass Shard"
+_playereqweapon_ = ["Glass Shard"]
 # Tracks player's horizontal location
 _playerx_ = 3
 # Tracks player's vertical location

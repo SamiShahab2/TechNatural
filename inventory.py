@@ -2,7 +2,7 @@
 # Inventory Module
 """Contains data for the player's inventory and menus that interact with the inventory"""
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-
+import os
 import stats
 
 # Keys that the player uses in the inventory
@@ -49,8 +49,7 @@ def weaponmenu():
   # Prepares the value for the loop
   stats.player.equipweap = "choose"
   # Loop checks if the player's input is either a weapon or an exit
-  while (stats.player.equipweap not in stats.player.weapons
-         and stats.player.equipweap != "E"):
+  while stats.player.equipweap != stats.player.weapons:
       try:
           print("\n")
           # Prints all of the weapons from the player's inventory
@@ -67,7 +66,7 @@ def weaponmenu():
           stats.player.equipweap = float(stats.player.equipweap)
       except ValueError:
           # If the chosen weapon is not in player weapons or the player isn't trying to exit:
-          if (stats.player.equipweap not in stats.player.weapons
+          if (stats.player.equipweap != stats.player.weapons
               and stats.player.equipweap != "E"):
               # This error message prints
               print("Type the name of a weapon or type 'e' to exit")

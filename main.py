@@ -3,7 +3,7 @@
 # Class: Computer Science 30
 # Assignment: RPG
 # Coder: Sami Shahab
-# Version: v3.4
+# Version: v4
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 '''A gridbased text-adventure rpg'''
 #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -26,7 +26,11 @@ _playerchoice_ = "N/A"
 
 
 # Contains all of the keys used in the movement function
-MoveOptions = ["a", "d", "w", "s", "c", "f", "m"]
+MoveOptions = ["a", "d", "w", "s", "e", "quit"]
+# Contains all of the keys used in the gamemenu function
+MenuOptions = ["c", "f", "m", "e", "s", 'quit']
+# Contains all of the keys used in the mainmenu function
+LoadOptions = ["n", "l", "quit"]
 
 
 # Functions ====================================================================================
@@ -64,18 +68,81 @@ def describeroom():
             print(map._room_.description)
             break
 
+
+def gamemenu():
+    global _playerchoice_
+    """Code that allows the player to select which action they want to take.
+    All submenus are accessed through this function."""
+    while _playerchoice_ == "N/A":
+        try:
+            # Prints out all of the menu options the players have
+            print("\n")
+            print("""e - Movement
+q - Quit Game
+c - Search
+f - Inventory
+m - Map
+s - Save""")
+            # The player inputs their option here
+            _playerchoice_ = input("Type the letter to choose what to do: ").lower()
+            print("\n")
+            # If the player inputs "q" then the player will exit the game
+            if _playerchoice_ == "q":
+                print("Bye Bye!")
+                _playerchoice_ = "quit"
+                sys.exit()
+            # The input is tested to see if it's an number
+            _playerchoice_ = float(_playerchoice_)
+            # A ValueError indicates the input is a string
+        except ValueError:
+            # Checks if the player's is a valid movement option
+            if _playerchoice_ not in MenuOptions:
+                # If not, an error message is shown and the loop continues
+                print("Input an letter from the options")
+                _playerchoice_ = "N/A"
+            # No ValueError indicates the input is a number
+        else:
+            # An error message is displayed and the loop continues
+            print("Don't input a number")
+            _playerchoice_ = "N/A"
+        finally:
+# Checks if the player searched, opened their inventory, or tried to check maps
+            if (_playerchoice_ in MenuOptions
+                and _playerchoice_ != "e"):
+              # If the player inputs c then the search function runs
+              if _playerchoice_ == "c":
+                  searchnevent.searchroom()
+              # If the player inputs f then the inventory function runs
+              elif _playerchoice_ == "f":
+                  inventory.inventory(_playerchoice_)
+              # If the player inputs m then the map function runs
+              elif _playerchoice_ == "m":
+                  inventory.playeritems.mapview(_playerchoice_)
+              elif _playerchoice_ == "s":
+                  stats.savegame()
+              # Loop will continue after the function has concluded
+              _playerchoice_ = "N/A"
+            elif _playerchoice_ == "e":
+              _playerchoice_ = "N/A"
+              movement()
+          # If none of the above matches then the general error message prints
+            else:
+              # Unless the player chose to quit or search
+              if (_playerchoice_ != "quit"
+                  or _playerchoice_ not in MenuOptions):
+                  print("Pick a valid option")
+    # Choice is set back to N/A
+    _playerchoice_ = "N/A"
+    # When the function is called again, the loop will work properly
+
+
 def movement():
     """Code that controls the player's movements"""
     global _playerchoice_
     # Plays the loop while a choice has not been inputted
     while _playerchoice_ == "N/A":
         try:
-            # Prints out all of the movement options the players have
-            print("\n")
-            print("""q - Quit Game
-c - Search
-f - Inventory
-m - Map""")
+            print("e - Return to previous menu")
             # If the player cannot move in that direction, the option is not printed
             if stats.player.x_loc != 0:
                 print("a - Move Left")
@@ -88,11 +155,6 @@ m - Map""")
             # The player inputs their option here
             _playerchoice_ = input("Type the letter to choose what to do: ").lower()
             print("\n")
-            # If the player inputs "q" then the player will exit the game
-            if _playerchoice_ == "q":
-                print("Bye Bye!")
-                _playerchoice_ = "quit"
-                sys.exit()
             # The input is tested to see if it's an number
             _playerchoice_ = float(_playerchoice_)
         # A ValueError indicates the input is a string
@@ -136,39 +198,67 @@ m - Map""")
               elif _playerchoice_ == "s":
                   stats.player.y_loc = stats.player.y_loc + 1
                   print("Moving down")
-              # Checks if the player searched, opened their inventory, or tried to check maps
-              elif (_playerchoice_ == "c" 
-                    or _playerchoice_ == "f"
-                    or _playerchoice_ == "m"):
-                  # If the player inputs c then the search function runs
-                  if _playerchoice_ == "c":
-                      searchnevent.searchroom()
-                  # If the player inputs f then the inventory function runs
-                  elif _playerchoice_ == "f":
-                      inventory.inventory(_playerchoice_)
-                  # If the player inputs m then the map function runs
-                  elif _playerchoice_ == "m":
-                      inventory.playeritems.mapview(_playerchoice_)
-                  # Loop will continue after the function has concluded
-                  _playerchoice_ = "N/A"
-              # If none of the above matches then the general error message prints
-              else:
-                  # Unless the player chose to quit or search
-                  if (_playerchoice_ != "quit" 
-                      or _playerchoice_ != "c"
-                      or _playerchoice_ != "f"):
-                      print("Movement Failed!")
+
+
+def mainmenu():
+    """Contains the code for the main menu 
+    including the functions to load and create a new game"""
+    global _playerchoice_
+    while _playerchoice_ == "N/A":
+        try:
+            print("\n")
+            print("n - New Game")
+            print("l - Load Game")
+            print("q - Quit")
+            # The player inputs their option here
+            _playerchoice_ = input("Type the letter to choose what to do: ").lower()
+            print("\n")
+            # If the player inputs "q" then the player will exit the game
+            if _playerchoice_ == "q":
+                print("Bye Bye!")
+                _playerchoice_ = "quit"
+                sys.exit()
+            # The input is tested to see if it's an number
+            _playerchoice_ = float(_playerchoice_)
+            # A ValueError indicates the input is a string
+        except ValueError:
+            # Checks if the player's is a valid option
+            if _playerchoice_ not in LoadOptions:
+                # If not, an error message is shown and the loop continues
+                print("Input an letter from the options")
+                _playerchoice_ = "N/A"
+            # No ValueError indicates the input is a number
+        else:
+            # An error message is displayed and the loop continues
+            print("Don't input a number")
+            _playerchoice_ = "N/A"
+        finally:
+    # Checks if the player searched, opened their inventory, or tried to check maps
+            if _playerchoice_ in LoadOptions:
+              # If the player inputs n then the newgame function runs
+              if _playerchoice_ == "n":
+                  stats.newgame()
+              # If the player inputs l then the loadgame function runs
+              elif _playerchoice_ == "l":
+                  stats.loadgame()
+          # If none of the above matches then the general error message prints
+            else:
+              # Unless the player chose to quit or search
+              if (_playerchoice_ != "quit"
+                  or _playerchoice_ not in LoadOptions):
+                  print("Pick a valid option")
     # Choice is set back to N/A
     _playerchoice_ = "N/A"
-    # When the function is called again, the loop will work properly
-        
+    # The game menu will now function
+
 
 def gameplay():
     """Encapsulates the essential functions for gameplay"""
+    mainmenu()
     while True:
         print("\n")
         describeroom()
-        movement()
+        gamemenu()
         map.refresh_room()
 
 
